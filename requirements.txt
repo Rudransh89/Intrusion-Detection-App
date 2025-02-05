@@ -1,4 +1,6 @@
-torch
 streamlit
-numpy
+torch
 pandas
+numpy
+matplotlib
+seaborn
