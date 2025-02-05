@@ -167,36 +167,36 @@ elif page == "Data Visualization":
 
     # File uploader for CSV
     # File uploader to choose CSV
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-if uploaded_file is not None:
+    if uploaded_file is not None:
     # Load the dataset
-    df = pd.read_csv(uploaded_file)
+        df = pd.read_csv(uploaded_file)
     
-    # Display the dataset
-    st.write("### Dataset")
-    st.write(df.head())
+        # Display the dataset
+        st.write("### Dataset")
+        st.write(df.head())
 
     # Handle missing values (fill NaNs with 0 or another strategy)
-    df = df.fillna(0)
+        df = df.fillna(0)
 
     # Select numeric columns for correlation and visualization
-    df_numeric = df.select_dtypes(include=[np.number])
+        df_numeric = df.select_dtypes(include=[np.number])
 
     # Feature distribution plot
-    st.write("### Feature Distribution")
-    feature = st.selectbox("Select a feature to visualize", df_numeric.columns)
-    plt.figure(figsize=(10, 6))
-    sns.histplot(df_numeric[feature], kde=True, color='#FF7043')
-    plt.title(f'Distribution of {feature}')
-    st.pyplot(plt)
+        st.write("### Feature Distribution")
+        feature = st.selectbox("Select a feature to visualize", df_numeric.columns)
+        plt.figure(figsize=(10, 6))
+        sns.histplot(df_numeric[feature], kde=True, color='#FF7043')
+        plt.title(f'Distribution of {feature}')
+        st.pyplot(plt)
 
     # Correlation matrix
-    st.write("### Correlation Matrix")
-    corr_matrix = df_numeric.corr()
-    plt.figure(figsize=(12, 8))
-    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
-    st.pyplot(plt)
+        st.write("### Correlation Matrix")
+        corr_matrix = df_numeric.corr()
+        plt.figure(figsize=(12, 8))
+        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+        st.pyplot(plt)
 
 elif page == "About":
     st.title("ℹ️ About")
