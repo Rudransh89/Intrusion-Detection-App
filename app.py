@@ -37,12 +37,10 @@ class FCNN_Model(nn.Module):
         return x
 
 
-# Define the model architecture first
-model = FCNN_Model()  # Use your specific model class here
+torch.save(model, 'trained_model.pth')
+model = torch.load('trained_model.pth')
+model.eval()  # Set to evaluation mode
 
-# Load the state_dict into the model
-model.load_state_dict(torch.load('trained_model.pth'))
-model.eval()
 
 
 # Define your prediction function
