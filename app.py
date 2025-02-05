@@ -214,10 +214,10 @@ elif page == "About":
     """)
 
     st.write("### Developer")
-    st.write("Developed by [Your Name].")
+    st.write("Developed by Rudransh Mishra.")
 
     st.write("### Contact")
-    st.write("For any queries, please contact [your.email@example.com].")
+    st.write("For any queries, please contact rudranshmishra191@gmail.com.")
 
 # Footer
 st.markdown(
