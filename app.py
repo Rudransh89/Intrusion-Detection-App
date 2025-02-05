@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# Define the model class
 class FCNN_Model(nn.Module):
     def __init__(self):
         super(FCNN_Model, self).__init__()
@@ -21,7 +22,7 @@ class FCNN_Model(nn.Module):
         self.fc4 = nn.Linear(256, 128)
         self.fc5 = nn.Linear(128, 64)
         self.fc6 = nn.Linear(64, 32)
-        self.fc7 = nn.Linear(32, 22)  # Output layer (Binary classification)
+        self.fc7 = nn.Linear(32, 22)  # Output layer (for multi-class classification)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
@@ -36,12 +37,17 @@ class FCNN_Model(nn.Module):
         x = self.fc7(x)
         return x
 
+# Initialize the model (important for both saving and loading)
+model = FCNN_Model()
 
-torch.save(model, 'trained_model.pth')
-model = torch.load('trained_model.pth')
-model.eval()  # Set to evaluation mode
-
-
+# Load the saved model
+try:
+    model.load_state_dict(torch.load('trained_model.pth'))
+    model.eval()  # Set to evaluation mode
+    print("Model loaded successfully!")
+except Exception as e:
+    print(f"Error loading model: {e}")
+    model = FCNN_Model()  # If there's an error, use an empty model
 
 # Define your prediction function
 def predict(input_data):
@@ -123,23 +129,26 @@ elif page == "Data Visualization":
     st.write("Explore the dataset and visualize different features")
 
     # Load a sample dataset
-    df = pd.read_csv('network_data.csv')
+    try:
+        df = pd.read_csv('network_data.csv')
+        st.write("### Dataset")
+        st.write(df.head())
 
-    st.write("### Dataset")
-    st.write(df.head())
+        st.write("### Feature Distribution")
+        feature = st.selectbox("Select a feature to visualize", df.columns)
+        plt.figure(figsize=(10, 6))
+        sns.histplot(df[feature], kde=True, color='#FF7043')
+        plt.title(f'Distribution of {feature}')
+        st.pyplot(plt)
 
-    st.write("### Feature Distribution")
-    feature = st.selectbox("Select a feature to visualize", df.columns)
-    plt.figure(figsize=(10, 6))
-    sns.histplot(df[feature], kde=True, color='#FF7043')
-    plt.title(f'Distribution of {feature}')
-    st.pyplot(plt)
+        st.write("### Correlation Matrix")
+        corr_matrix = df.corr()
+        plt.figure(figsize=(12, 8))
+        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+        st.pyplot(plt)
 
-    st.write("### Correlation Matrix")
-    corr_matrix = df.corr()
-    plt.figure(figsize=(12, 8))
-    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
-    st.pyplot(plt)
+    except Exception as e:
+        st.write(f"Error loading dataset: {e}")
 
 elif page == "About":
     st.title("ℹ️ About")
