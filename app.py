@@ -70,9 +70,11 @@ st.markdown(
         color: white;
         border-radius: 8px;
         padding: 10px 20px;
+        transition: transform 0.3s ease;
     }
     .stButton>button:hover {
         background-color: #FF5722;
+        transform: scale(1.1);
     }
     .stNumberInput>div>div>input {
         border: 2px solid #FF7043;
@@ -86,18 +88,40 @@ st.markdown(
         color: white;
         border-radius: 8px;
         padding: 10px 20px;
+        transition: transform 0.3s ease;
     }
     .stSidebar .stButton>button:hover {
         background-color: #FF5722;
+        transform: scale(1.1);
     }
     .stSidebar .stNumberInput>div>div>input {
         border: 2px solid #FF7043;
         border-radius: 8px;
     }
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #FF7043;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        animation: slideUp 1s ease-out;
+    }
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 # NSL-KDD feature names
 feature_names = [
@@ -142,24 +166,37 @@ elif page == "Data Visualization":
     st.write("Explore the dataset and visualize different features")
 
     # File uploader for CSV
-    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        st.write("### Dataset")
-        st.write(df.head())
+    # File uploader to choose CSV
+uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
-        st.write("### Feature Distribution")
-        feature = st.selectbox("Select a feature to visualize", df.columns)
-        plt.figure(figsize=(10, 6))
-        sns.histplot(df[feature], kde=True, color='#FF7043')
-        plt.title(f'Distribution of {feature}')
-        st.pyplot(plt)
+if uploaded_file is not None:
+    # Load the dataset
+    df = pd.read_csv(uploaded_file)
+    
+    # Display the dataset
+    st.write("### Dataset")
+    st.write(df.head())
 
-        st.write("### Correlation Matrix")
-        corr_matrix = df.corr()
-        plt.figure(figsize=(12, 8))
-        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
-        st.pyplot(plt)
+    # Handle missing values (fill NaNs with 0 or another strategy)
+    df = df.fillna(0)
+
+    # Select numeric columns for correlation and visualization
+    df_numeric = df.select_dtypes(include=[np.number])
+
+    # Feature distribution plot
+    st.write("### Feature Distribution")
+    feature = st.selectbox("Select a feature to visualize", df_numeric.columns)
+    plt.figure(figsize=(10, 6))
+    sns.histplot(df_numeric[feature], kde=True, color='#FF7043')
+    plt.title(f'Distribution of {feature}')
+    st.pyplot(plt)
+
+    # Correlation matrix
+    st.write("### Correlation Matrix")
+    corr_matrix = df_numeric.corr()
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+    st.pyplot(plt)
 
 elif page == "About":
     st.title("ℹ️ About")
