@@ -7,6 +7,36 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+class FCNN_Model(nn.Module):
+    def __init__(self):
+        super(FCNN_Model, self).__init__()
+        
+        # Fully connected layers with Dropout
+        self.fc1 = nn.Linear(42, 1024)  # 42 input features
+        self.dropout1 = nn.Dropout(0.5)  # Dropout with 50% rate
+        self.fc2 = nn.Linear(1024, 512)
+        self.dropout2 = nn.Dropout(0.5)
+        self.fc3 = nn.Linear(512, 256)
+        self.dropout3 = nn.Dropout(0.5)
+        self.fc4 = nn.Linear(256, 128)
+        self.fc5 = nn.Linear(128, 64)
+        self.fc6 = nn.Linear(64, 32)
+        self.fc7 = nn.Linear(32, 22)  # Output layer (Binary classification)
+
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = self.dropout1(x)
+        x = F.relu(self.fc2(x))
+        x = self.dropout2(x)
+        x = F.relu(self.fc3(x))
+        x = self.dropout3(x)
+        x = F.relu(self.fc4(x))
+        x = F.relu(self.fc5(x))
+        x = F.relu(self.fc6(x))
+        x = self.fc7(x)
+        return x
+
+
 # Define the model architecture first
 model = FCNN_Model()  # Use your specific model class here
 
