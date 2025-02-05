@@ -109,7 +109,7 @@ if page == "Home":
     Welcome to the Network Intrusion Detection System. This application uses a machine learning model to predict whether a network activity is normal or an intrusion.
     Use the navigation menu to explore different sections of the app.
     """)
-    st.image("network_security.jpg", use_column_width=True)
+    st.image("network_security.jpg", use_container_width=True)
 
 elif page == "Predict":
     st.title("🔍 Predict Network Intrusion")
