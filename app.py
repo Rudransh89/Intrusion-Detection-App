@@ -7,9 +7,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load the saved model
-model = torch.load('trained_model.pth')
+# Define the model architecture first
+model = FCNN_Model()  # Use your specific model class here
+
+# Load the state_dict into the model
+model.load_state_dict(torch.load('trained_model.pth'))
 model.eval()
+
 
 # Define your prediction function
 def predict(input_data):
