@@ -99,6 +99,19 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# NSL-KDD feature names
+feature_names = [
+    "duration", "protocol_type", "service", "flag", "src_bytes", "dst_bytes",
+    "land", "wrong_fragment", "urgent", "hot", "num_failed_logins", "logged_in",
+    "num_compromised", "root_shell", "su_attempted", "num_root", "num_file_creations",
+    "num_shells", "num_access_files", "num_outbound_cmds", "is_host_login", "is_guest_login",
+    "count", "srv_count", "serror_rate", "srv_serror_rate", "rerror_rate", "srv_rerror_rate",
+    "same_srv_rate", "diff_srv_rate", "srv_diff_host_rate", "dst_host_count", "dst_host_srv_count",
+    "dst_host_same_srv_rate", "dst_host_diff_srv_rate", "dst_host_same_src_port_rate",
+    "dst_host_srv_diff_host_rate", "dst_host_serror_rate", "dst_host_srv_serror_rate",
+    "dst_host_rerror_rate", "dst_host_srv_rerror_rate"
+]
+
 # Sidebar navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", ["Home", "Predict", "Data Visualization", "About"])
@@ -109,16 +122,16 @@ if page == "Home":
     Welcome to the Network Intrusion Detection System. This application uses a machine learning model to predict whether a network activity is normal or an intrusion.
     Use the navigation menu to explore different sections of the app.
     """)
-    st.image("network_security.jpg", use_container_width=True)
+    st.image("network_security.jpg", use_column_width=True)
 
 elif page == "Predict":
     st.title("🔍 Predict Network Intrusion")
     st.write("Enter data for prediction")
 
-    # Create input fields for features (for example, 42 features)
+    # Create input fields for features
     input_data = []
-    for i in range(42):  # 42 features
-        input_data.append(st.number_input(f"Feature {i+1}", min_value=0.0, max_value=100.0, step=0.01))
+    for feature in feature_names:
+        input_data.append(st.number_input(f"{feature}", min_value=0.0, max_value=100.0, step=0.01))
 
     if st.button('Predict'):
         prediction = predict([input_data])
@@ -128,9 +141,10 @@ elif page == "Data Visualization":
     st.title("📊 Data Visualization")
     st.write("Explore the dataset and visualize different features")
 
-    # Load a sample dataset
-    try:
-        df = pd.read_csv('network_data.csv')
+    # File uploader for CSV
+    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file)
         st.write("### Dataset")
         st.write(df.head())
 
@@ -146,9 +160,6 @@ elif page == "Data Visualization":
         plt.figure(figsize=(12, 8))
         sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
         st.pyplot(plt)
-
-    except Exception as e:
-        st.write(f"Error loading dataset: {e}")
 
 elif page == "About":
     st.title("ℹ️ About")
